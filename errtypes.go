@@ -65,6 +65,12 @@ func NewUnauthenticatedError(s string) error {
 	return unauthenticatedError{s: s}
 }
 
+// NewUnauthenticatedErrorf returns an error, which indicates that it's caused by missing authentication
+// it accepts a format string and a variadic argument for it
+func NewUnauthenticatedErrorf(s string, args ...interface{}) error {
+	return unauthenticatedError{s: fmt.Sprintf(s, args...)}
+}
+
 // unauthenticatedError is the standard implementation of the Unauthenticated
 type unauthenticatedError struct {
 	s string
