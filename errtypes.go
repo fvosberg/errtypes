@@ -24,6 +24,12 @@ type Forbidden interface {
 	IsForbidden() bool
 }
 
+// NotFound is used, when a requested recource doesn't exist
+// Corresponding HTTP status code is 404
+type NotFound interface {
+	IsNotFound() bool
+}
+
 // IsBadInput checks, whether this error is caused by a missing or wrong input parameter, or not
 func IsBadInput(err error) bool {
 	bi, ok := errors.Cause(err).(BadInput)
@@ -109,5 +115,31 @@ func (e forbiddenError) Error() string {
 
 // Forbidden indicates if this error is caused by insufficient permissions
 func (e forbiddenError) IsForbidden() bool {
+	return true
+}
+
+// IsNotFound checks, whether this error is caused by a missing resource
+func IsNotFound(err error) bool {
+	bi, ok := errors.Cause(err).(NotFound)
+	return ok && bi.IsNotFound()
+}
+
+// NewNotFound returns an error, which indicates that it's caused by a missing resource
+func NewNotFound(s string) error {
+	return notFoundError{s: s}
+}
+
+// notFoundError is the standard implementation of the NotFound
+type notFoundError struct {
+	s string
+}
+
+// Error returns the string representation of this error
+func (e notFoundError) Error() string {
+	return e.s
+}
+
+// NotFound indicates if this error is caused by a missing resource
+func (e notFoundError) IsNotFound() bool {
 	return true
 }
