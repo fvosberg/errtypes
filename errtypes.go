@@ -129,6 +129,11 @@ func NewNotFound(s string) error {
 	return notFoundError{s: s}
 }
 
+// NewNotFoundf returns an error, which indicates that it's caused by a missing resource - supports sprintf
+func NewNotFoundf(s string, i ...interface{}) error {
+	return notFoundError{s: fmt.Sprintf(s, i...)}
+}
+
 // notFoundError is the standard implementation of the NotFound
 type notFoundError struct {
 	s string
