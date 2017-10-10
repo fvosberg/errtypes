@@ -103,6 +103,11 @@ func NewForbiddenError(s string) error {
 	return forbiddenError{s: s}
 }
 
+// NewForbiddenErrorf returns an error, which indicates that it's caused by insufficient permissions
+func NewForbiddenErrorf(s string, i ...interface{}) error {
+	return forbiddenError{s: fmt.Sprintf(s, i...)}
+}
+
 // forbiddenError is the standard implementation of the Forbidden
 type forbiddenError struct {
 	s string
