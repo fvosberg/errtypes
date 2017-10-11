@@ -66,14 +66,14 @@ func IsUnauthenticated(err error) bool {
 	return ok && bi.IsUnauthenticated()
 }
 
-// NewUnauthenticatedError returns an error, which indicates that it's caused by missing authentication
-func NewUnauthenticatedError(s string) error {
+// NewUnauthenticated returns an error, which indicates that it's caused by missing authentication
+func NewUnauthenticated(s string) error {
 	return unauthenticatedError{s: s}
 }
 
-// NewUnauthenticatedErrorf returns an error, which indicates that it's caused by missing authentication
+// NewUnauthenticatedf returns an error, which indicates that it's caused by missing authentication
 // it accepts a format string and a variadic argument for it
-func NewUnauthenticatedErrorf(s string, args ...interface{}) error {
+func NewUnauthenticatedf(s string, args ...interface{}) error {
 	return unauthenticatedError{s: fmt.Sprintf(s, args...)}
 }
 
@@ -98,13 +98,13 @@ func IsForbidden(err error) bool {
 	return ok && bi.IsForbidden()
 }
 
-// NewForbiddenError returns an error, which indicates that it's caused by insufficient permissions
-func NewForbiddenError(s string) error {
+// NewForbidden returns an error, which indicates that it's caused by insufficient permissions
+func NewForbidden(s string) error {
 	return forbiddenError{s: s}
 }
 
-// NewForbiddenErrorf returns an error, which indicates that it's caused by insufficient permissions
-func NewForbiddenErrorf(s string, i ...interface{}) error {
+// NewForbiddenf returns an error, which indicates that it's caused by insufficient permissions
+func NewForbiddenf(s string, i ...interface{}) error {
 	return forbiddenError{s: fmt.Sprintf(s, i...)}
 }
 
