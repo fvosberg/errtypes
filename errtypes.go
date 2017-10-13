@@ -37,11 +37,11 @@ func IsBadInput(err error) bool {
 }
 
 // NewBadInputError returns an error, which indicates that it's caused by a missing or wrong input parameter
-func NewBadInputError(s string) error {
+func NewBadInput(s string) error {
 	return badInputError{s: s}
 }
 
-func NewBadInputErrorf(s string, i ...interface{}) error {
+func NewBadInputf(s string, i ...interface{}) error {
 	return badInputError{s: fmt.Sprintf(s, i...)}
 }
 
