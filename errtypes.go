@@ -154,7 +154,12 @@ func (e notFoundError) IsNotFound() bool {
 	return true
 }
 
+// HTTPStatusCode determines the status code by the error type
+// it panics for non nil values, because it can't guarantee to pick the right success code
 func HTTPStatusCode(err error) int {
+	if err == nil {
+		panic("called with nil error")
+	}
 	if IsBadInput(err) {
 		return 400
 	} else if IsUnauthenticated(err) {
