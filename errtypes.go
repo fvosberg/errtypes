@@ -153,3 +153,17 @@ func (e notFoundError) Error() string {
 func (e notFoundError) IsNotFound() bool {
 	return true
 }
+
+func HttpStatusCode(err error) int {
+	if IsBadInput(err) {
+		return 400
+	} else if IsUnauthenticated(err) {
+		return 401
+	} else if IsForbidden(err) {
+		return 403
+	} else if IsNotFound(err) {
+		return 404
+	} else {
+		return 500
+	}
+}
