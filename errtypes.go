@@ -154,7 +154,7 @@ func (e notFoundError) IsNotFound() bool {
 	return true
 }
 
-func HttpStatusCode(err error) int {
+func HTTPStatusCode(err error) int {
 	if IsBadInput(err) {
 		return 400
 	} else if IsUnauthenticated(err) {
