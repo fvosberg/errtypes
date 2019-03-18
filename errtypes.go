@@ -7,27 +7,33 @@ import (
 )
 
 // BadInput is used for errors, which are caused by a missing or wrong input parameter.
-// Corresponding HTTP status code is 400
+// The corresponding HTTP status code is 400
 type BadInput interface {
 	IsBadInput() bool
 }
 
 // Unauthenticated is used for errors, which are caused by missing authentication.
-// Corresponding HTTP status code is 401
+// The corresponding HTTP status code is 401
 type Unauthenticated interface {
 	IsUnauthenticated() bool
 }
 
 // Forbidden is used for errors, which are caused by unsufficient permissions
-// Corresponding HTTP status code is 403
+// The corresponding HTTP status code is 403
 type Forbidden interface {
 	IsForbidden() bool
 }
 
 // NotFound is used, when a requested recource doesn't exist
-// Corresponding HTTP status code is 404
+// The corresponding HTTP status code is 404
 type NotFound interface {
 	IsNotFound() bool
+}
+
+// Conflict is used, when a requested recource already exists
+// The corresponding HTTP status code is 409
+type Conflict interface {
+	IsConflict() bool
 }
 
 // IsBadInput checks, whether this error is caused by a missing or wrong input parameter, or not
@@ -154,6 +160,37 @@ func (e notFoundError) IsNotFound() bool {
 	return true
 }
 
+// IsConflict checks, whether this error is caused by a conflicting resource
+func IsConflict(err error) bool {
+	v, ok := errors.Cause(err).(Conflict)
+	return ok && v.IsConflict()
+}
+
+// NewConflict returns an error, which indicates that it's caused by a conflicting resource
+func NewConflict(s string) error {
+	return conflictError{s: s}
+}
+
+// NewNotFoundf returns an error, which indicates that it's caused by a missing resource - supports sprintf
+func NewConflictf(s string, i ...interface{}) error {
+	return conflictError{s: fmt.Sprintf(s, i...)}
+}
+
+// conflictError is the standard implementation of the Conflict interface
+type conflictError struct {
+	s string
+}
+
+// Error returns the string representation of this error
+func (e conflictError) Error() string {
+	return e.s
+}
+
+// conflictError indicates if this error is caused by a missing resource
+func (e conflictError) IsConflict() bool {
+	return true
+}
+
 // HTTPStatusCode determines the status code by the error type
 // it panics for non nil values, because it can't guarantee to pick the right success code
 func HTTPStatusCode(err error) int {
@@ -168,6 +205,8 @@ func HTTPStatusCode(err error) int {
 		return 403
 	} else if IsNotFound(err) {
 		return 404
+	} else if IsConflict(err) {
+		return 409
 	} else {
 		return 500
 	}
